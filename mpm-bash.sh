@@ -132,8 +132,9 @@ prompt_product_list
 # If you pressed Enter, get everything!
 if [[ -z "$productList" ]]; then
 
-  # Specify the products to exclude from the install-all list.
-  declare -A productsToRemove=(
+  # Specify the products to add, starting from the bottom, and going up based on the release you picked.
+  # Everything is one release off because the selected release has to be 1 less than the release being compared.
+  declare -A newProductsToAdd=(
     ["R2023a"]="Simulink_Fault_Analyzer Polyspace_Test Simulink_Desktop_Real-Time"
     ["R2022b"]="MATLAB_Test C2000_Microcontroller_Blockset"
     ["R2022a"]="Medical_Imaging_Toolbox Simscape_Battery"
@@ -144,14 +145,14 @@ if [[ -z "$productList" ]]; then
     ["R2020a"]="UAV_Toolbox Radar_Toolbox Lidar_Toolbox Deep_Learning_HDL_Toolbox"
     ["R2019b"]="Simulink_Compiler Motor_Control_Blockset MATLAB_Web_App_Server Wireless_HDL_Toolbox"
     ["R2019a"]="ROS_Toolbox Simulink_PLC_Coder Navigation_Toolbox"
-    ["R2018b"]="System_Composer SoC_Blockset SerDes_Toolbox Reinforcement_Learning_Toolbox Audio_Toolbox Mixed-Signal_Blockset \
+    ["R2018b"]="System_Composer SoC_Blockset SerDes_Toolbox Reinforcement_Learning_Toolbox Audio_Toolbox \
     Mixed-Signal_Blockset AUTOSAR_Blockset MATLAB_Parallel_Server Polyspace_Bug_Finder_Server \
     Polyspace_Code_Prover_Server Automated_Driving_Toolbox Computer_Vision_Toolbox"
     ["R2018a"]="Communications_Toolbox Simscape_Electrical Sensor_Fusion_and_Tracking_Toolbox Deep_Learning_Toolbox \
     5G_Toolbox WLAN_Toolbox LTE_Toolbox"
     ["R2017b"]="Predictive_Maintenance_Toolbox Vehicle_Network_Toolbox Vehicle_Dynamics_Blockset"      
     
-    #R2017a isn't a valid option. These are the products available from every release from R2017b and onwards.
+    # These are the products available from every release from R2017b and onwards.
     ["R2017a"]="Aerospace_Blockset Aerospace_Toolbox Antenna_Toolbox Bioinformatics_Toolbox Control_System_Toolbox \
     Curve_Fitting_Toolbox DSP_System_Toolbox Database_Toolbox \
     Datafeed_Toolbox Econometrics_Toolbox Embedded_Coder Filter_Design_HDL_Coder Financial_Instruments_Toolbox \
@@ -168,19 +169,16 @@ if [[ -z "$productList" ]]; then
     Symbolic_Math_Toolbox System_Identification_Toolbox Text_Analytics_Toolbox Vision_HDL_Toolbox Wavelet_Toolbox"
   )
 
-  # Initialize the productList with the base list of products to remove
-  productList="$baseProductsToRemove"
-
-  # Remove unsupported products from all future releases as well.
-  for release in "${!productsToRemove[@]}"; do
+  # Logic allowing us to start from the bottom of the list and work our way up.
+  for release in "${!newProductsToAdd[@]}"; do
       if [[ $releaseNumber > $release ]]; then
-          productList+=" ${productsToRemove[$release]}"
+          productList+=" ${newProductsToAdd[$release]}"
       fi
   done
 
   # We also need to add products that only existed in earlier releases/were named differently.
-  # This may look confusing because everything in below appears 1 release prior to when it last appearred, like the list above.
-  declare -A productsToAdd=(
+  # Everything is one release off because the selected release has to be 1 greater than the release being compared.
+  declare -A oldProductsToAdd=(
     ["R2022a"]="Simulink_Requirements"
     ["R2021a"]="Fixed-Point_Designer Trading_Toolbox"
     ["R2020a"]="LTE_HDL_Toolbox"
@@ -190,10 +188,10 @@ if [[ -z "$productList" ]]; then
     Simscape_Power_Systems WLAN_System_Toolbox"
   )
   
-  # Logic to add previously existing products from future releases. Not confusing at all. :)
-  for release in "${!productsToAdd[@]}"; do
+  # Logic allowing us to start from the top of the list and work our way down. This allows discontinued/renamed products to be installed.
+  for release in "${!oldProductsToAdd[@]}"; do
       if [[ $releaseNumber < $release ]]; then
-          productList+=" ${productsToAdd[$release]}"
+          productList+=" ${oldProductsToAdd[$release]}"
       fi
   done
 fi
