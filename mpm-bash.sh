@@ -115,8 +115,9 @@ while [[ $validRelease == false ]]; do
           $releaseNumber != "R2022a" && \
           $releaseNumber != "R2022b" && \
           $releaseNumber != "R2023a" && \
-          $releaseNumber != "R2023b" ]]; then
-        echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2023b.\e[0m"
+          $releaseNumber != "R2023b" && \
+          $releaseNumber != "R2024a" ]]; then
+        echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2024a.\e[0m"
     else
         validRelease=true
     fi
@@ -135,6 +136,7 @@ if [[ -z "$productList" ]]; then
   # Specify the products to add, starting from the bottom, and going up based on the release you picked.
   # Everything is one release off because the selected release has to be 1 less than the release being compared.
   declare -A newProductsToAdd=(
+    ["R2023b"]="" # No new products in R2024a.
     ["R2023a"]="Simulink_Fault_Analyzer Polyspace_Test Simulink_Desktop_Real-Time"
     ["R2022b"]="MATLAB_Test C2000_Microcontroller_Blockset"
     ["R2022a"]="Medical_Imaging_Toolbox Simscape_Battery"
