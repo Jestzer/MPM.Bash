@@ -235,24 +235,33 @@ if [[ "$existingMPM" != true ]]; then
 fi
 
 # Check if "Installation complete" is present in the output of MPM.
-if [[ $mpmOutput != *"Installation complete"* ]]; then
+if [[ $mpmOutput != *"Installation complete!"* ]]; then
     echo -e "\e[31mInstallation failed. Please see the error above.\e[0m"
     exit 1
 fi
 
 # If you specified a license file, do the thing to put it in place.
 if [[ -n "${originalLicenseFile// }" ]]; then
-  cd $installationDirectory
-  mkdir licenses
-  cd licenses
+  cd "$installationDirectory" && mkdir -p licenses && cd licenses
+  if [[ $? -eq 0 ]]; then
+    licenseFileName=$(basename "$originalLicenseFile")
 
-  licenseFileName=$(basename "$originalLicenseFile")
+    # Change the file extension to .lic if it's .dat. MATLAB doesn't like .dat.
+    if [[ $licenseFileName == *.dat ]]; then    
+      licenseFileName="${licenseFileName%.*}.lic"
+    fi
 
-  # Change the file extension to .lic if it's .dat. MATLAB doesn't like .dat.
-  if [[ $licenseFileName == *.dat ]]; then    
-    licenseFileName="${licenseFileName%.*}.lic"
+    cp "$originalLicenseFile" "$licenseFileName"
+    if [[ $? -eq 0 ]]; then
+      echo "The license file has been successfully copied to the installation!"
+    else
+      echo "Error: Failed to copy the license file." >&2
+      exit 1
+    fi
+  else
+    echo "Error: Failed to create or access the licenses directory." >&2
+    exit 1
   fi
-
-  cp $originalLicenseFile $licenseFileName
-
+else
+  echo "The license file has somehow become unspecified or is now empty."
 fi
