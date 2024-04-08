@@ -90,7 +90,7 @@ fi
 
 # Pick your release number.
 prompt_release_number() {
-  echo "Which release would you like to install? (ex: R2023b). Press Enter to use the latest release."
+  echo "Which release would you like to install? (ex: R2024a). Press Enter to use the latest release."
   read -p "> " releaseNumber
 }
 
@@ -101,7 +101,7 @@ while [[ $validRelease == false ]]; do
     prompt_release_number
 
     if [[ -z "$releaseNumber" ]]; then
-        releaseNumber="R2023b"
+        releaseNumber="R2024a"
         validRelease=true
     elif [[ $releaseNumber != "R2017b" && \
           $releaseNumber != "R2018a" && \
