@@ -235,7 +235,7 @@ if [[ "$existingMPM" != true ]]; then
 fi
 
 # Check if "Installation complete" is present in the output of MPM.
-if [[ $mpmOutput != *"Installation complete!"* ]]; then
+if [[ $mpmOutput != *"Installation complete"* ]]; then
     echo -e "\e[31mInstallation failed. Please see the error above.\e[0m"
     exit 1
 fi
