@@ -263,5 +263,6 @@ if [[ -n "${originalLicenseFile// }" ]]; then
     exit 1
   fi
 else
-  echo "The license file has somehow become unspecified or is now empty."
+  # Add some code to detect if any license file is present in the installation.
+  # echo "Please remember to place a license file in your installation!"
 fi
