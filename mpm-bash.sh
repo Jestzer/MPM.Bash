@@ -196,7 +196,7 @@ if [[ -z "$productList" ]]; then
           productList+=" ${oldProductsToAdd[$release]}"
       fi
   done
-elif [ "$userInput" == "parallel_products" ]; then
+elif [ "$productList" == "parallel_products" ]; then
     productList="MATLAB MATLAB_Parallel_Server Parallel_Computing_Toolbox"
 fi
 
