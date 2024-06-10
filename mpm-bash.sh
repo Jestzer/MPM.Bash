@@ -219,8 +219,8 @@ prompt_license_file() {
     fi
 
     # Check if the file exists and has the correct file extension.
-    if [ ! -f "$originalLicenseFile" ] || [[ ! "$originalLicenseFile" =~ \.(lic|dat)$ ]]; then
-      echo -e "\e[31mInvalid license file specified. Please make sure the file exists and has either a .lic or .dat extension.\e[0m"
+    if [ ! -f "$originalLicenseFile" ] || [[ ! "$originalLicenseFile" =~ \.(lic|dat|xml)$ ]]; then
+      echo -e "\e[31mInvalid path to license file specified. Please make sure the file exists, you have reading permissions to it, and has either a .lic, .dat, or .xml file extension.\e[0m"
     else
       break  # Exit the loop, valid input provided.
     fi
