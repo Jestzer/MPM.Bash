@@ -182,7 +182,7 @@ if [[ -z "$productList" ]]; then
   # Everything is one release off because the selected release has to be 1 greater than the release being compared.
   declare -A oldProductsToAdd=(
     ["R2022a"]="Simulink_Requirements"
-    ["R2021a"]="Fixed-Point_Designer Trading_Toolbox"
+    ["R2021a"]="Trading_Toolbox"
     ["R2020a"]="LTE_HDL_Toolbox"
     ["R2019a"]="Audio_System_Toolbox Automated_Driving_System_Toolbox Computer_Vision_System_Toolbox \
     MATLAB_Distributed_Computing_Server"
