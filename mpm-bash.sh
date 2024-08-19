@@ -14,7 +14,7 @@ fi
 
 prompt_download_directory() {
   echo "Enter the path to the directory where you would like MPM to download to. Press Enter to use /tmp."
-  read -p "> " downloadDirectory
+  read -e -p "> " downloadDirectory
 
 # Check if the user provided a file path, otherwise use "/tmp".
 if [[ -z "$downloadDirectory" ]]; then
@@ -201,7 +201,7 @@ elif [ "$productList" == "parallel_products" ]; then
 fi
 
 echo "Where would you like to install these products? Press Enter to install to /usr/local/MATLAB/$releaseNumber."
-read -p "> " installationDirectory
+read -e -p "> " installationDirectory
 
 # Check if the user provided an installation path, otherwise go to /usr/local/MATLAB/$releaseNumber.
 if [[ -z "$installationDirectory" ]]; then
@@ -212,7 +212,7 @@ fi
 prompt_license_file() {
   while true; do
     echo "If you would like to activate now, please provide the path to your license file. Press Enter to add a license file yourself afterwards."
-    read -p "> " originalLicenseFile
+    read -e -p "> " originalLicenseFile
 
     if [ -z "$originalLicenseFile" ]; then
       break  # Exit the loop, leaving $originalLicenseFile blank.
