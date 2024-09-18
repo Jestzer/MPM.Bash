@@ -12,6 +12,12 @@ else
     echo -e "\e[31mWARNING: Unrecognized operating system. This script may malfunction.\e[0m"
 fi
 
+# Print the version number, if requested, and then close the script.
+if [[ "$1" == "-version" ]]; then
+    echo "Version 5"
+    exit 0
+fi
+
 prompt_download_directory() {
   echo "Enter the path to the directory where you would like MPM to download to. Press Enter to use /tmp."
   read -e -p "> " downloadDirectory
