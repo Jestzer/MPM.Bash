@@ -8,3 +8,6 @@ Notes:
 - When specifying products, you can use the shortcut "parallel_products" to select MATLAB, MATLAB Parallel Server, and Parallel Computing Toolbox. This will work for R2019a+.
 - Specifying to install all products will not install any support packages.
 - Use the argument "-version" to specify the script's version number.
+
+To-do list:
+- Block any non-Linux platforms.
