@@ -19,6 +19,7 @@ fi
 prompt_download_directory() {
   echo "Enter the path to the directory where you would like MPM to download to. Press Enter to use /tmp."
   read -e -p "> " downloadDirectory
+  history -s "$downloadDirectory"
 
   # Check if the user provided a file path, otherwise use "/tmp".
   if [[ -z "$downloadDirectory" ]]; then
@@ -31,12 +32,17 @@ prompt_download_directory
 # Check if the directory exists. If you type in a single word, it creates it in the current working directory.
 while [[ ! -d "$downloadDirectory" ]]; do
   echo "Directory '$downloadDirectory' does not exist. Do you want to create it? (y/n)"
-  read -p "> " createDownloadDirectory
+  read -e -p "> " createDownloadDirectory
+  history -s "$createDownloadDirectory"
 
-  if [[ "$createDownloadDirectory" == "y" ]]; then
+  # Convert the input to lowercase so that it is not case-sensitive.
+  createDownloadDirectory=$(echo "$createDownloadDirectory" | tr '[:upper:]' '[:lower:]')
+
+  if [[ "$createDownloadDirectory" == "y" || "$createDownloadDirectory" == "yes" || -z "$createDownloadDirectory" ]]; then
     if mkdir -p "$downloadDirectory"; then
       echo "Directory '$downloadDirectory' created."
     else
+      echo -e "\033[31mFailed to create directory '$downloadDirectory'. See the error message above.\033[0m"
       prompt_download_directory
     fi
   else
@@ -58,16 +64,20 @@ if [ -f "mpm" ]; then
       use your existing copy (not recommended)."
 
     echo $mpmExistsPrompt
-    read -p "> " choice
+    read -e -p "> " choice
+    history -s "$choice"
+
+    # Convert the input to lowercase so that it is not case-sensitive.
+    choice=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
 
     case "$choice" in
-    y | Y)
+    y | yes)
       echo "Overwriting existing MPM..."
       rm "mpm"
       download_mpm
       break
       ;;
-    n | N)
+    n | no)
       echo "Using existing MPM."
       existingMPM=true
       break
@@ -94,7 +104,8 @@ fi
 # Pick your release number.
 prompt_release_number() {
   echo "Which release would you like to install? (ex: R2024b). Press Enter to use the latest release."
-  read -p "> " releaseNumber
+  read -e -p "> " releaseNumber
+  history -s "$releaseNumber"
 }
 
 # Check if it's valid/accepted.
@@ -129,7 +140,8 @@ done
 
 prompt_product_list() {
   echo "Which products would you like to install? Press Enter to install all products."
-  read -p "> " productList
+  read -e -p "> " productList
+  history -s "$productList"
 }
 
 prompt_product_list
@@ -207,6 +219,7 @@ fi
 
 echo "Where would you like to install these products? Press Enter to install to /usr/local/MATLAB/$releaseNumber."
 read -e -p "> " installationDirectory
+history -s "$installationDirectory"
 
 # Check if the user provided an installation path, otherwise go to /usr/local/MATLAB/$releaseNumber.
 if [[ -z "$installationDirectory" ]]; then
@@ -218,6 +231,7 @@ prompt_license_file() {
   while true; do
     echo "If you would like to activate now, please provide the path to your license file. Press Enter to add a license file yourself afterwards."
     read -e -p "> " originalLicenseFile
+    history -s "originalLicenseFile"
 
     if [ -z "$originalLicenseFile" ]; then
       break # Exit the loop, leaving $originalLicenseFile blank.
