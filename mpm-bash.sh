@@ -2,31 +2,28 @@
 # Script that interacts with MPM (MATLAB Package Manager) to install MathWorks products.
 # Each product specified should be separated with a space. Spaces in a name are separated with an underscore.
 
-# This script doesn't support macOS. A Go program will be made to support all 3 operating systems.
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "$(tput setaf 1)macOS is unsupported. Exiting.$(tput sgr0)"
-    exit 1
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    echo ""
+# This script doesn't support anything other than Linux. Use MPM.Go if you want to use this on macOS or Windows.
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  echo ""
 else
-    echo -e "\e[31mWARNING: Unrecognized operating system. This script may malfunction.\e[0m"
+  echo "$(tput setaf 1)Non-Linux platforms are unsupported. Exiting.$(tput sgr0)"
+  exit 1
 fi
 
 # Print the version number, if requested, and then close the script.
 if [[ "$1" == "-version" ]]; then
-    echo "Version 5"
-    exit 0
+  echo "Version 5.1"
+  exit 0
 fi
 
 prompt_download_directory() {
   echo "Enter the path to the directory where you would like MPM to download to. Press Enter to use /tmp."
   read -e -p "> " downloadDirectory
 
-# Check if the user provided a file path, otherwise use "/tmp".
-if [[ -z "$downloadDirectory" ]]; then
-  downloadDirectory="/tmp"
-fi
-
+  # Check if the user provided a file path, otherwise use "/tmp".
+  if [[ -z "$downloadDirectory" ]]; then
+    downloadDirectory="/tmp"
+  fi
 }
 
 prompt_download_directory
@@ -49,37 +46,37 @@ done
 
 cd "$downloadDirectory"
 
-download_mpm(){
+download_mpm() {
   wget https://www.mathworks.com/mpm/glnxa64/mpm
 }
 
 # Check if mpm already exists in this directory.
 if [ -f "mpm" ]; then
-    while true; do
+  while true; do
 
-      mpmExistsPrompt="MPM is already downloaded in this directory. Type 'y' to overwrite it with a newer copy or type 'n' to \
+    mpmExistsPrompt="MPM is already downloaded in this directory. Type 'y' to overwrite it with a newer copy or type 'n' to \
       use your existing copy (not recommended)."
 
-      echo $mpmExistsPrompt
-      read -p "> " choice
+    echo $mpmExistsPrompt
+    read -p "> " choice
 
-        case "$choice" in
-            y|Y)
-              echo "Overwriting existing MPM..."
-              rm "mpm"
-              download_mpm
-              break
-              ;;
-            n|N)
-              echo "Using existing MPM."
-              existingMPM=true
-              break
-              ;;
-            *)
-              echo -e "\e[31mInvalid choice. Please enter 'y' or 'n'.\e[0m"
-              ;;
-        esac
-    done
+    case "$choice" in
+    y | Y)
+      echo "Overwriting existing MPM..."
+      rm "mpm"
+      download_mpm
+      break
+      ;;
+    n | N)
+      echo "Using existing MPM."
+      existingMPM=true
+      break
+      ;;
+    *)
+      echo -e "\e[31mInvalid choice. Please enter 'y' or 'n'.\e[0m"
+      ;;
+    esac
+  done
 else
   download_mpm
 fi
@@ -104,30 +101,30 @@ prompt_release_number() {
 validRelease=false
 
 while [[ $validRelease == false ]]; do
-    prompt_release_number
+  prompt_release_number
 
-    if [[ -z "$releaseNumber" ]]; then
-        releaseNumber="R2024b"
-        validRelease=true
-    elif [[ $releaseNumber != "R2017b" && \
-          $releaseNumber != "R2018a" && \
-          $releaseNumber != "R2018b" && \
-          $releaseNumber != "R2019a" && \
-          $releaseNumber != "R2019b" && \
-          $releaseNumber != "R2020a" && \
-          $releaseNumber != "R2020b" && \
-          $releaseNumber != "R2021a" && \
-          $releaseNumber != "R2021b" && \
-          $releaseNumber != "R2022a" && \
-          $releaseNumber != "R2022b" && \
-          $releaseNumber != "R2023a" && \
-          $releaseNumber != "R2023b" && \
-          $releaseNumber != "R2024a" && \
-          $releaseNumber != "R2024b" ]]; then
-        echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2024b.\e[0m"
-    else
-        validRelease=true
-    fi
+  if [[ -z "$releaseNumber" ]]; then
+    releaseNumber="R2024b"
+    validRelease=true
+  elif [[ $releaseNumber != "R2017b" &&
+    $releaseNumber != "R2018a" &&
+    $releaseNumber != "R2018b" &&
+    $releaseNumber != "R2019a" &&
+    $releaseNumber != "R2019b" &&
+    $releaseNumber != "R2020a" &&
+    $releaseNumber != "R2020b" &&
+    $releaseNumber != "R2021a" &&
+    $releaseNumber != "R2021b" &&
+    $releaseNumber != "R2022a" &&
+    $releaseNumber != "R2022b" &&
+    $releaseNumber != "R2023a" &&
+    $releaseNumber != "R2023b" &&
+    $releaseNumber != "R2024a" &&
+    $releaseNumber != "R2024b" ]]; then
+    echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2024b.\e[0m"
+  else
+    validRelease=true
+  fi
 done
 
 prompt_product_list() {
@@ -160,8 +157,8 @@ if [[ -z "$productList" ]]; then
     Polyspace_Code_Prover_Server Automated_Driving_Toolbox Computer_Vision_Toolbox"
     ["R2018a"]="Communications_Toolbox Simscape_Electrical Sensor_Fusion_and_Tracking_Toolbox Deep_Learning_Toolbox \
     5G_Toolbox WLAN_Toolbox LTE_Toolbox"
-    ["R2017b"]="Predictive_Maintenance_Toolbox Vehicle_Network_Toolbox Vehicle_Dynamics_Blockset"      
-    
+    ["R2017b"]="Predictive_Maintenance_Toolbox Vehicle_Network_Toolbox Vehicle_Dynamics_Blockset"
+
     # These are the products available from every release from R2017b and onwards.
     ["R2017a"]="Aerospace_Blockset Aerospace_Toolbox Antenna_Toolbox Bioinformatics_Toolbox Control_System_Toolbox \
     Curve_Fitting_Toolbox DSP_System_Toolbox Database_Toolbox \
@@ -181,9 +178,9 @@ if [[ -z "$productList" ]]; then
 
   # Logic allowing us to start from the bottom of the list and work our way up.
   for release in "${!newProductsToAdd[@]}"; do
-      if [[ $releaseNumber > $release ]]; then
-          productList+=" ${newProductsToAdd[$release]}"
-      fi
+    if [[ $releaseNumber > $release ]]; then
+      productList+=" ${newProductsToAdd[$release]}"
+    fi
   done
 
   # We also need to add products that only existed in earlier releases/were named differently.
@@ -197,15 +194,15 @@ if [[ -z "$productList" ]]; then
     ["R2018b"]="Communications_System_Toolbox LTE_System_Toolbox Neural_Network_Toolbox Simscape_Electronics \
     Simscape_Power_Systems WLAN_System_Toolbox"
   )
-  
+
   # Logic allowing us to start from the top of the list and work our way down. This allows discontinued/renamed products to be installed.
   for release in "${!oldProductsToAdd[@]}"; do
-      if [[ $releaseNumber < $release ]]; then
-          productList+=" ${oldProductsToAdd[$release]}"
-      fi
+    if [[ $releaseNumber < $release ]]; then
+      productList+=" ${oldProductsToAdd[$release]}"
+    fi
   done
 elif [ "$productList" == "parallel_products" ]; then
-    productList="MATLAB MATLAB_Parallel_Server Parallel_Computing_Toolbox"
+  productList="MATLAB MATLAB_Parallel_Server Parallel_Computing_Toolbox"
 fi
 
 echo "Where would you like to install these products? Press Enter to install to /usr/local/MATLAB/$releaseNumber."
@@ -223,14 +220,14 @@ prompt_license_file() {
     read -e -p "> " originalLicenseFile
 
     if [ -z "$originalLicenseFile" ]; then
-      break  # Exit the loop, leaving $originalLicenseFile blank.
+      break # Exit the loop, leaving $originalLicenseFile blank.
     fi
 
     # Check if the file exists and has the correct file extension.
     if [ ! -f "$originalLicenseFile" ] || [[ ! "$originalLicenseFile" =~ \.(lic|dat|xml)$ ]]; then
       echo -e "\e[31mInvalid path to license file specified. Please make sure the file exists, you have reading permissions to it, and has either a .lic, .dat, or .xml file extension.\e[0m"
     else
-      break  # Exit the loop, valid input provided.
+      break # Exit the loop, valid input provided.
     fi
   done
 }
@@ -241,23 +238,23 @@ mpmOutput=$(./mpm install --release=$releaseNumber --destination=$installationDi
 #
 # Delete MPM only if you downloaded during this installation. Otherwise, you probably still want it.
 if [[ "$existingMPM" != true ]]; then
-    rm "$downloadDirectory/mpm"
+  rm "$downloadDirectory/mpm"
 fi
 
 # Check if "Installation complete" is present in the output of MPM.
 if [[ $mpmOutput != *"Installation complete"* ]]; then
-    echo -e "\e[31mInstallation failed. Please see the error above.\e[0m"
-    exit 1
+  echo -e "\e[31mInstallation failed. Please see the error above.\e[0m"
+  exit 1
 fi
 
 # If you specified a license file, do the thing to put it in place.
-if [[ -n "${originalLicenseFile// }" ]]; then
+if [[ -n "${originalLicenseFile// /}" ]]; then
   cd "$installationDirectory" && mkdir -p licenses && cd licenses
   if [[ $? -eq 0 ]]; then
     licenseFileName=$(basename "$originalLicenseFile")
 
     # Change the file extension to .lic if it's .dat. MATLAB doesn't like .dat.
-    if [[ $licenseFileName == *.dat ]]; then    
+    if [[ $licenseFileName == *.dat ]]; then
       licenseFileName="${licenseFileName%.*}.lic"
     fi
 
