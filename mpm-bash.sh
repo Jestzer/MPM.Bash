@@ -103,7 +103,7 @@ fi
 
 # Pick your release number.
 prompt_release_number() {
-  echo "Which release would you like to install? (ex: R2024b). Press Enter to use the latest release."
+  echo "Which release would you like to install? (ex: R2025a). Press Enter to use the latest release."
   read -e -p "> " releaseNumber
   history -s "$releaseNumber"
 }
@@ -115,7 +115,7 @@ while [[ $validRelease == false ]]; do
   prompt_release_number
 
   if [[ -z "$releaseNumber" ]]; then
-    releaseNumber="R2024b"
+    releaseNumber="R2025a"
     validRelease=true
   elif [[ $releaseNumber != "R2017b" &&
     $releaseNumber != "R2018a" &&
@@ -131,8 +131,9 @@ while [[ $validRelease == false ]]; do
     $releaseNumber != "R2023a" &&
     $releaseNumber != "R2023b" &&
     $releaseNumber != "R2024a" &&
-    $releaseNumber != "R2024b" ]]; then
-    echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2024b.\e[0m"
+    $releaseNumber != "R2024b" &&
+    $releaseNumber != "R2025a" ]]; then
+    echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2025a.\e[0m"
   else
     validRelease=true
   fi
@@ -152,6 +153,7 @@ if [[ -z "$productList" ]]; then
   # Specify the products to add, starting from the bottom, and going up based on the release you picked.
   # Everything is one release off because the selected release has to be 1 less than the release being compared.
   declare -A newProductsToAdd=(
+    ["R2024b"]="" # No new products in R2025a.
     ["R2024a"]="" # No new products in R2024b.
     ["R2023b"]="" # No new products in R2024a.
     ["R2023a"]="Simulink_Fault_Analyzer Polyspace_Test Simulink_Desktop_Real-Time"
@@ -174,7 +176,7 @@ if [[ -z "$productList" ]]; then
     # These are the products available from every release from R2017b and onwards.
     ["R2017a"]="Aerospace_Blockset Aerospace_Toolbox Antenna_Toolbox Bioinformatics_Toolbox Control_System_Toolbox \
     Curve_Fitting_Toolbox DSP_System_Toolbox Database_Toolbox \
-    Datafeed_Toolbox Econometrics_Toolbox Embedded_Coder Filter_Design_HDL_Coder Financial_Instruments_Toolbox \
+    Datafeed_Toolbox Econometrics_Toolbox Embedded_Coder Financial_Instruments_Toolbox \
     Financial_Toolbox Fixed-Point_Designer Fuzzy_Logic_Toolbox GPU_Coder Global_Optimization_Toolbox HDL_Coder HDL_Verifier \
     Image_Acquisition_Toolbox Image_Processing_Toolbox Instrument_Control_Toolbox MATLAB MATLAB_Coder \
     MATLAB_Compiler MATLAB_Compiler_SDK MATLAB_Production_Server MATLAB_Report_Generator Mapping_Toolbox \
@@ -198,6 +200,7 @@ if [[ -z "$productList" ]]; then
   # We also need to add products that only existed in earlier releases/were named differently.
   # Everything is one release off because the selected release has to be 1 greater than the release being compared.
   declare -A oldProductsToAdd=(
+    ["R2025a"]="Filter_Design_HDL_Coder"
     ["R2022a"]="Simulink_Requirements"
     ["R2021a"]="Trading_Toolbox"
     ["R2020a"]="LTE_HDL_Toolbox"
