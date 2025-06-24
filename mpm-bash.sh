@@ -216,8 +216,10 @@ if [[ -z "$productList" ]]; then
       productList+=" ${oldProductsToAdd[$release]}"
     fi
   done
-elif [ "$productList" == "parallel_products" ]; then
+elif [ "$productList" == "parallel_products" && $releaseNumber != "R2017b" && $releaseNumber != "R2018a" && $releaseNumber != "R2018b"]; then
   productList="MATLAB MATLAB_Parallel_Server Parallel_Computing_Toolbox"
+elif [ "$productList" == "parallel_products" && $releaseNumber == "R2017b" || $releaseNumber == "R2018a" || $releaseNumber == "R2018b"]; then
+  productList="MATLAB MATLAB_Distributed_Computing_Server Parallel_Computing_Toolbox"
 fi
 
 echo "Where would you like to install these products? Press Enter to install to /usr/local/MATLAB/$releaseNumber."
