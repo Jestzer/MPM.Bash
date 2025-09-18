@@ -103,7 +103,7 @@ fi
 
 # Pick your release number.
 prompt_release_number() {
-  echo "Which release would you like to install? (ex: R2025a). Press Enter to use the latest release."
+  echo "Which release would you like to install? (ex: R2025b). Press Enter to use the latest release."
   read -e -p "> " releaseNumber
   history -s "$releaseNumber"
 }
@@ -115,7 +115,7 @@ while [[ $validRelease == false ]]; do
   prompt_release_number
 
   if [[ -z "$releaseNumber" ]]; then
-    releaseNumber="R2025a"
+    releaseNumber="R2025b"
     validRelease=true
   elif [[ $releaseNumber != "R2017b" &&
     $releaseNumber != "R2018a" &&
@@ -132,8 +132,9 @@ while [[ $validRelease == false ]]; do
     $releaseNumber != "R2023b" &&
     $releaseNumber != "R2024a" &&
     $releaseNumber != "R2024b" &&
-    $releaseNumber != "R2025a" ]]; then
-    echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2025a.\e[0m"
+    $releaseNumber != "R2025a" &&
+    $releaseNumber != "R2025b" ]]; then
+    echo -e "\e[31mInvalid release chosen. Please enter a release between R2017b-R2025b.\e[0m"
   else
     validRelease=true
   fi
@@ -153,6 +154,7 @@ if [[ -z "$productList" ]]; then
   # Specify the products to add, starting from the bottom, and going up based on the release you picked.
   # Everything is one release off because the selected release has to be 1 less than the release being compared.
   declare -A newProductsToAdd=(
+    ["R2025a"]="" # No new products in R2025b.
     ["R2024b"]="" # No new products in R2025a.
     ["R2024a"]="" # No new products in R2024b.
     ["R2023b"]="" # No new products in R2024a.
