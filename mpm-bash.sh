@@ -12,7 +12,7 @@ fi
 
 # Print the version number, if requested, and then close the script.
 if [[ "$1" == "-version" ]]; then
-  echo "Version 5.1"
+  echo "Version 5.2"
   exit 0
 fi
 
